@@ -1,9 +1,105 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>My DevOps Project</title>
+    <meta charset="UTF-8">
+    <title>DevOps Project</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background: linear-gradient(to right, #4facfe, #00f2fe);
+            color: white;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background: rgba(0,0,0,0.3);
+            padding: 20px;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .container {
+            margin-top: 80px;
+        }
+
+        h1 {
+            font-size: 40px;
+        }
+
+        p {
+            font-size: 20px;
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 12px 25px;
+            font-size: 16px;
+            background: white;
+            color: #333;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background: #ddd;
+        }
+
+        #status {
+            margin-top: 30px;
+            font-size: 22px;
+            font-weight: bold;
+            color: yellow;
+        }
+
+        footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background: rgba(0,0,0,0.3);
+            padding: 10px;
+        }
+    </style>
 </head>
+
 <body>
-    <h1> DevOps Project 🚀</h1>
+
+<header>
+    🚀 DevOps CI/CD Project using Jenkins
+</header>
+
+<div class="container">
+    <h1>Hello from DevOps Project 🎉</h1>
+    <p>Automated Website Deployment using Jenkins</p>
+
+    <button onclick="showMessage()">Click Me</button>
+
+    <p id="status">Loading build status...</p>
+</div>
+
+<footer>
+    © 2026 DevOps Project | Student Project
+</footer>
+
+<script>
+    function showMessage() {
+        alert("Welcome! Your DevOps pipeline is working 🚀");
+    }
+
+    // Fetch build status
+    fetch("status.txt")
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById("status").innerText = data;
+        })
+        .catch(() => {
+            document.getElementById("status").innerText = "Build status not available";
+        });
+</script>
+
 </body>
 </html>
