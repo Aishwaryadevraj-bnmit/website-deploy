@@ -1,193 +1,192 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>DevOps CI/CD Project</title>
+<meta charset="UTF-8">
+<title>DevOps Quiz App</title>
 
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            background: linear-gradient(to right, #4facfe, #00f2fe);
-            color: white;
-            margin: 0;
-        }
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+        background: linear-gradient(to right, #4facfe, #00f2fe);
+        color: white;
+        margin: 0;
+    }
 
-        header {
-            background: rgba(0,0,0,0.3);
-            padding: 20px;
-            font-size: 24px;
-        }
+    header {
+        padding: 20px;
+        font-size: 26px;
+        background: rgba(0,0,0,0.3);
+    }
 
-        .container {
-            margin-top: 60px;
-        }
+    .container {
+        margin-top: 60px;
+    }
 
-        button {
-            padding: 10px 20px;
-            margin: 10px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-        }
+    h1 {
+        font-size: 40px;
+    }
 
-        button:hover {
-            background: #ddd;
-            color: black;
-        }
+    button {
+        padding: 12px;
+        margin: 10px;
+        width: 250px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 16px;
+        background: #ccc;
+        color: black;
+    }
 
-        #status {
-            margin-top: 20px;
-            font-size: 22px;
-            color: yellow;
-        }
+    button:hover {
+        background: white;
+    }
 
-        .quiz-container {
-            margin-top: 50px;
-        }
+    #options button {
+        display: block;
+        margin: 10px auto;
+    }
 
-        #options button {
-            display: block;
-            margin: 10px auto;
-            width: 220px;
-        }
+    #nextBtn {
+        background: black;
+        color: white;
+        width: 150px;
+    }
 
-        footer {
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            background: rgba(0,0,0,0.3);
-            padding: 10px;
-        }
-    </style>
+    /* FINAL SCORE SCREEN */
+    #resultBox {
+        display: none;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: rgba(0,0,0,0.8);
+        padding: 40px;
+        border-radius: 12px;
+        font-size: 28px;
+    }
+</style>
 </head>
 
 <body>
 
 <header>
-    🚀 DevOps CI/CD Project using Jenkins
+🚀 DevOps Quiz Application
 </header>
 
 <div class="container">
 
-    <h1>Hello from DevOps Project 🎉</h1>
-    <p>Automated Deployment using Jenkins</p>
+    <h1>DevOps Quiz 🧠</h1>
 
-    <!-- Button -->
-    <button onclick="showMessage()">Click Me</button>
+    <h2 id="question"></h2>
 
-    <!-- Trigger Jenkins -->
-    <button onclick="triggerBuild()">Run Jenkins Build</button>
+    <div id="options"></div>
 
-    <!-- Status -->
-    <p id="status">Loading build status...</p>
-
-    <!-- Quiz Section -->
-    <div class="quiz-container">
-        <h2>DevOps Quiz 🧠</h2>
-        <p id="question"></p>
-        <div id="options"></div>
-        <button onclick="nextQuestion()">Next</button>
-        <p id="score"></p>
-    </div>
+    <button id="nextBtn" onclick="nextQuestion()">Next</button>
 
 </div>
 
-<footer>
-    © 2026 DevOps Project
-</footer>
+<!-- RESULT BOX -->
+<div id="resultBox"></div>
 
 <script>
-    // Button alert
-    function showMessage() {
-        alert("Welcome! Your DevOps pipeline is working 🚀");
+const quiz = [
+    {
+        question: "What does CI/CD stand for?",
+        options: [
+            "Continuous Integration/Continuous Deployment",
+            "Code Integration",
+            "Central Deployment"
+        ],
+        answer: 0
+    },
+    {
+        question: "Which tool is used for automation?",
+        options: ["GitHub", "Jenkins", "HTML"],
+        answer: 1
+    },
+    {
+        question: "Where is code stored?",
+        options: ["Jenkins", "GitHub", "XAMPP"],
+        answer: 1
+    },
+    {
+        question: "Which server is commonly used?",
+        options: ["Apache", "MS Word", "Excel"],
+        answer: 0
+    }
+];
+
+let currentQ = 0;
+let score = 0;
+let selected = null;
+
+function loadQuestion() {
+    selected = null;
+
+    document.getElementById("question").innerText = quiz[currentQ].question;
+
+    let optionsHTML = "";
+    quiz[currentQ].options.forEach((opt, index) => {
+        optionsHTML += `<button id="opt${index}" onclick="selectOption(${index})">${opt}</button>`;
+    });
+
+    document.getElementById("options").innerHTML = optionsHTML;
+}
+
+function selectOption(index) {
+    selected = index;
+
+    // reset all buttons
+    quiz[currentQ].options.forEach((_, i) => {
+        document.getElementById("opt" + i).style.background = "#ccc";
+    });
+
+    // highlight selected
+    document.getElementById("opt" + index).style.background = "orange";
+}
+
+function nextQuestion() {
+    if (selected === null) {
+        alert("Please select an answer!");
+        return;
     }
 
-    // Fetch build status
-    function loadStatus() {
-        fetch("status.txt")
-            .then(res => res.text())
-            .then(data => {
-                document.getElementById("status").innerText = data;
-            })
-            .catch(() => {
-                document.getElementById("status").innerText = "Error loading status";
-            });
+    // correct / wrong color
+    if (selected === quiz[currentQ].answer) {
+        score++;
+        document.getElementById("opt" + selected).style.background = "green";
+    } else {
+        document.getElementById("opt" + selected).style.background = "red";
+        document.getElementById("opt" + quiz[currentQ].answer).style.background = "green";
     }
 
-    // Trigger Jenkins build (simple token method)
-    function triggerBuild() {
-        fetch("http://localhost:8080/job/my-project/build?token=123")
-        .then(() => {
-            alert("Build Triggered 🚀");
-            setTimeout(loadStatus, 5000);
-        })
-        .catch(() => {
-            alert("Failed to trigger build ❌");
-        });
-    }
-
-    // Load status initially
-    loadStatus();
-
-    // QUIZ LOGIC
-    const quiz = [
-        {
-            question: "What does CI/CD stand for?",
-            options: ["Continuous Integration/Continuous Deployment", "Code Integration", "Central Deployment"],
-            answer: 0
-        },
-        {
-            question: "Which tool is used for automation?",
-            options: ["GitHub", "Jenkins", "HTML"],
-            answer: 1
-        },
-        {
-            question: "Which server is used?",
-            options: ["Apache", "Nginx", "Tomcat"],
-            answer: 0
-        },
-        {
-            question: "Where is code stored?",
-            options: ["Jenkins", "GitHub", "XAMPP"],
-            answer: 1
-        }
-    ];
-
-    let currentQ = 0;
-    let score = 0;
-
-    function loadQuestion() {
-        document.getElementById("question").innerText = quiz[currentQ].question;
-
-        let optionsHTML = "";
-        quiz[currentQ].options.forEach((opt, index) => {
-            optionsHTML += `<button onclick="checkAnswer(${index})">${opt}</button>`;
-        });
-
-        document.getElementById("options").innerHTML = optionsHTML;
-    }
-
-    function checkAnswer(selected) {
-        if (selected === quiz[currentQ].answer) {
-            score++;
-        }
-    }
-
-    function nextQuestion() {
+    setTimeout(() => {
         currentQ++;
 
         if (currentQ < quiz.length) {
             loadQuestion();
         } else {
-            document.getElementById("question").innerText = "Quiz Completed!";
-            document.getElementById("options").innerHTML = "";
-            document.getElementById("score").innerText = "Your Score: " + score;
+            showResult();
         }
-    }
+    }, 800);
+}
 
-    // Load first question
-    loadQuestion();
+function showResult() {
+    document.querySelector(".container").style.display = "none";
+
+    let resultBox = document.getElementById("resultBox");
+    resultBox.style.display = "block";
+
+    resultBox.innerHTML = `
+        🎉 Quiz Completed! <br><br>
+        Your Score: ${score} / ${quiz.length}
+    `;
+}
+
+// start quiz
+loadQuestion();
 </script>
 
 </body>
